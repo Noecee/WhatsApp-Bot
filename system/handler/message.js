@@ -39,6 +39,8 @@ module.exports.Message = async (conn, m, store) => {
 		const plugin = (m.command = plugins.get(cmd) || plugins.find((v) => v.command && v.command.includes(cmd)));
 		const quoted = m.quoted ? m.quoted : m;
 		
+		global.store = store 
+		
 		if (m) {
 			require("../lib/database").idb(m);
 			console.log("Command : " + m.body)
