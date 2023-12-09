@@ -24,6 +24,7 @@ const { Boom } = require("@hapi/boom");
 const path = require("path");
 const fs = require("fs");
 const chokidar = require("chokidar");
+const syntaxerror = require("syntax-error");
 
 const msgRetryCounterCache = new NodeCache();
 const pairingCode = process.argv.includes("--pairing");
@@ -151,14 +152,35 @@ const connectToWhatsApp = async () => {
  
 connectToWhatsApp()
 
-let choki = chokidar.watch([config.options.pathPlugins], { persistent: true })
-
-choki 
-  .on("change", async (Path) => {
-    console.log(`Changed ${Path}?update=${Date.now() + 1}`);
-	await Function.reloadDir(Path, global.plugins)
-  }) 
-  .on("add", async function (Path) {
-    await Function.reloadDir(Path, global.plugins)
+const watchPlugins = (folderPath) => {
+  fs.watch(folderPath, { recursive: true }, (eventType, filename) => {
+    if (eventType === 'change') {
+      reloadPlugin(folderPath, filename);
+    }
   });
-  
+}; 
+
+const reloadPlugin = (folderPath, filename) => {
+  const filePath = path.join(folderPath, filename);
+
+  const pluginFilter = filename => /\.js$/.test(filename);
+  if (pluginFilter(filename)) {
+    if (filePath in require.cache) {
+      delete require.cache[require.resolve("../" + filePath)];
+      console.log(`Reloaded plugin '${filePath}'`);
+    } else {
+      console.log(`Loaded new plugin '${filePath}'`);
+    }
+
+    let err = syntaxerror(fs.readFileSync(filePath), filename);
+    if (err) {
+      console.error(`Syntax error while loading '${filename}'\n${err}`);
+    } else {
+      delete require.cache[require.resolve("../" + filePath)];	
+      const module = require("../" + filePath)
+      global.plugins.set(filePath, module);
+    }
+  }
+};
+
+watchPlugins("plugins");

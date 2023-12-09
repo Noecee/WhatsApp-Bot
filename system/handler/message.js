@@ -152,12 +152,36 @@ module.exports.readPlungins = async (pathname = config.options.pathPlugins) => {
 				const plugin = require("../../" + name)
 				if (!plugin.tags) return;
 				plugins.set(name, plugin);
-				console.log("List Plugins : " + name)
             }
 		})
 	} catch (e) { 
 		console.error(e);
 	}
+}
+
+let pluginFilter = filename => /\.js$/.test(filename)
+
+module.exports.reloadPlugins = (pathname, folder, filename) => {
+  if (pluginFilter(filename)) {
+    let dir = path.join(pathname, folder, filename)
+    if (dir in require.cache) {
+      delete require.cache[dir]
+      if (fs.existsSync(dir)) conn.logger.info(`re - require plugin '${filename}'`)
+      else {
+        conn.logger.warn(`deleted plugin '${filename}'`)
+        return delete require.cache[require.resolve("../../" + dir)];
+      }
+    } else conn.logger.info(`requiring new plugin '${filename}'`)
+    let err = syntaxerror(fs.readFileSync(dir), filename)
+    if (err) conn.logger.error(`syntax error while loading '${filename}'\n${err}`)
+    else try {
+      global.plugins.set(dir, require("../../" + dir))
+    } catch (e) {
+      conn.logger.error(e)
+    } finally {
+      global.plugins = Object.fromEntries(Object.entries(global.plugins).sort(([a], [b]) => a.localeCompare(b)))
+    }
+  }
 }
 
 config.reloadFile(require.resolve(__filename))

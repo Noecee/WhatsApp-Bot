@@ -30,7 +30,7 @@ I am an automated system (WhatsApp Bot) that can help to do something, search an
 ╏↬ *Hari* : *%week %weton*
 ╏↬ *Waktu* : *%time*
 ╏↬ *Tanggal* : *%date*
-╏↬ *Version* : *%version*
+╏↬ *Version* : *1.2.0*
 ╏↬ *Prefix Used* : *[ %p ]*
 ╰────────────๑ 
 ${readmore} 
