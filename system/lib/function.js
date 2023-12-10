@@ -30,8 +30,8 @@ module.exports = new (class Function {
         ? fileURLToPath(path)
         : path
       : /file:\/\/\//.test(path)
-      ? path
-      : pathToFileURL(path).href;
+        ? path
+        : pathToFileURL(path).href;
   }
 
   // source code https://github.com/BochilGaming/games-wabot/blob/e4151d33cded4cfa6f1ceabc8558e1678f2a0f53/lib/helper.js#L14
@@ -41,8 +41,8 @@ module.exports = new (class Function {
     return regex.test(dir)
       ? dir
       : fs.existsSync(dir) && fs.statSync(dir).isDirectory
-      ? dir.replace(regex, "")
-      : path.dirname(dir);
+        ? dir.replace(regex, "")
+        : path.dirname(dir);
   }
 
   async dirSize(directory) {
@@ -176,7 +176,7 @@ module.exports = new (class Function {
       throw e;
     }
   }
-  
+
   fetchBuffer(string, options = {}) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -274,13 +274,13 @@ module.exports = new (class Function {
   }
 
   async reloadDir(Path, plugins = global.plugins) {
-  	const pathComponents = Path.split("/");
-  	const fileName = pathComponents[pathComponents.length - 1];
-  	const cleanedFileName = fileName.replace(/\d+$/, "");
-  	const cleanedPath = Path.replace(fileName, cleanedFileName);
-  	const module = require("../../" + cleanedPath)
-  	delete require.cache[require.resolve("../../" + cleanedPath)];
-  	plugins.set(cleanedPath, module) 
+    const pathComponents = Path.split("/");
+    const fileName = pathComponents[pathComponents.length - 1];
+    const cleanedFileName = fileName.replace(/\d+$/, "");
+    const cleanedPath = Path.replace(fileName, cleanedFileName);
+    const module = require("../../" + cleanedPath);
+    delete require.cache[require.resolve("../../" + cleanedPath)];
+    plugins.set(cleanedPath, module);
   }
 
   mime(name) {
@@ -323,16 +323,16 @@ module.exports = new (class Function {
 
     return `${result}${ext ? `.${ext}` : ""}`;
   }
-  
-  pickRandom (list) {
-  	return list[Math.floor(list.length * Math.random())]
+
+  pickRandom(list) {
+    return list[Math.floor(list.length * Math.random())];
   }
-  
+
   toRupiah(angka) {
     var balancenyeini = "";
     var angkarev = angka.toString().split("").reverse().join("");
     for (var i = 0; i < angkarev.length; i++)
-    if (i % 3 == 0) balancenyeini += angkarev.substr(i, 3) + ".";
+      if (i % 3 == 0) balancenyeini += angkarev.substr(i, 3) + ".";
     return (
       "" +
       balancenyeini

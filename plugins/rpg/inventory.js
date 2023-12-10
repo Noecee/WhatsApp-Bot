@@ -66,22 +66,22 @@ ${String.fromCharCode(8206).repeat(4201)}
 ╭────────[ COOLDOWN ]───────┐
 │🕢 Hourly : ${
       user.lasthourly > 1
-        ? set.func.clockString(3600000 - (new Date() - user.lasthourly))
+        ? Func.clockString(3600000 - (new Date() - user.lasthourly))
         : "Ready"
     }
 │🕕 Daily : ${
       user.lastclaim > 1
-        ? set.func.clockString(86400000 - (new Date() - user.lastclaim))
+        ? Func.clockString(86400000 - (new Date() - user.lastclaim))
         : "Ready"
     }
 │🕝 Weekly : ${
       user.lastweekly > 1
-        ? set.func.clockString(604800000 - (new Date() - user.lastweekly))
+        ? Func.clockString(604800000 - (new Date() - user.lastweekly))
         : "Ready"
     }
 │🕦 Monthly : ${
       user.lastmonthly > 1
-        ? set.func.clockString(2592000000 - (new Date() - user.lastmonthly))
+        ? Func.clockString(2592000000 - (new Date() - user.lastmonthly))
         : "Ready"
     }
 ╰───────────━⃝┅⃝━───────────┘`.trim();

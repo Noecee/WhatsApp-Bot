@@ -1,10 +1,10 @@
-const fs = require('fs');
-const { dirname, join } = require('path');
-const { fileURLToPath } = require('url');
-const baileys = require('@whiskeysockets/baileys');
-const Jimp = require('jimp');
-const { parsePhoneNumber } = require('libphonenumber-js');
-const Crypto = require('crypto');
+const fs = require("fs");
+const { dirname, join } = require("path");
+const { fileURLToPath } = require("url");
+const baileys = require("@whiskeysockets/baileys");
+const Jimp = require("jimp");
+const { parsePhoneNumber } = require("libphonenumber-js");
+const Crypto = require("crypto");
 const { fromBuffer } = require("file-type");
 const { writeExif } = require("./sticker");
 
@@ -93,8 +93,8 @@ function Client({ conn, store }) {
                   name: "WhatsApp",
                 }
               : id === conn.decodeJid(conn?.user?.id)
-              ? conn.user
-              : conn.contacts[id] || {};
+                ? conn.user
+                : conn.contacts[id] || {};
         return (
           v?.name ||
           v?.subject ||
@@ -371,6 +371,51 @@ function Client({ conn, store }) {
       },
       enumerable: true,
     },
+
+    sendFile: {
+      async value(
+        jid,
+        PATH,
+        caption = "",
+        fileName,
+        quoted,
+        ptt = false,
+        options = {},
+      ) {
+        let types = await Function.getFile(PATH);
+        let { filename, size, ext, mime, data } = types;
+        let type = "",
+          mimetype = mime,
+          pathFile = filename;
+        if (options.asDocument) type = "document";
+        if (options.asSticker || /webp/.test(mime)) {
+          let { writeExif } = require("./sticker.js");
+          let media = { mimetype: mime, data };
+          pathFile = await writeExif(media, {
+            packname: global.packname,
+            author: global.packname,
+            categories: options.categories ? options.categories : [],
+          });
+          await fs.promises.unlink(filename);
+          type = "sticker";
+          mimetype = "image/webp";
+        } else if (/image/.test(mime)) type = "image";
+        else if (/video/.test(mime)) type = "video";
+        else if (/audio/.test(mime)) type = "audio";
+        else type = "document";
+        await conn.sendMessage(
+          jid,
+          {
+            [type]: data,
+            caption: caption,
+            mimetype,
+            fileName,
+            ...options,
+          },
+          { quoted, ...options },
+        );
+      },
+    },
   });
 
   return conn;
@@ -458,8 +503,8 @@ async function serialize(conn, msg) {
       (typeof msg.messageTimestamp === "number"
         ? msg.messageTimestamp
         : msg.messageTimestamp.low
-        ? msg.messageTimestamp.low
-        : msg.messageTimestamp.high) || m.msg.timestampMs * 1000;
+          ? msg.messageTimestamp.low
+          : msg.messageTimestamp.high) || m.msg.timestampMs * 1000;
     m.isMedia = !!m.msg?.mimetype || !!m.msg?.thumbnailDirectPath;
     if (m.isMedia) {
       m.mime = m.msg?.mimetype;

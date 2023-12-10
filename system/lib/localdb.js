@@ -3,7 +3,9 @@ const path = require("path");
 
 class Database {
   constructor(Path) {
-    this.file = Path ? Path : path.join(process.cwd(), "system/temp/database.json");
+    this.file = Path
+      ? Path
+      : path.join(process.cwd(), "system/temp/database.json");
   }
 
   read() {
@@ -14,20 +16,17 @@ class Database {
 
   write(data) {
     const database = data ? data : global.db;
-    fs.writeFileSync(
-      this.file,
-      JSON.stringify(database, null, 3)
-    );
+    fs.writeFileSync(this.file, JSON.stringify(database, null, 3));
   }
 
   async connect() {
     let content = await this.read();
     if (!content || Object.keys(content).length === 0) {
       global.db = {
-          users: {},
-          chats: {},
-          stats: {},
-          settings: {}
+        users: {},
+        chats: {},
+        stats: {},
+        settings: {},
       };
       await this.write();
     } else {
@@ -36,4 +35,4 @@ class Database {
   }
 }
 
-module.exports = Database; 
+module.exports = Database;

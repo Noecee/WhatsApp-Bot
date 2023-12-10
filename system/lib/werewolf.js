@@ -60,7 +60,7 @@ const findObject = (obj = {}, key, value) => {
     if (obj[key] === value) {
       result.push(obj);
     }
-    Object.keys(obj).forEach(function(k) {
+    Object.keys(obj).forEach(function (k) {
       recursiveSearch(obj[k]);
     });
   };
@@ -164,11 +164,7 @@ const getPlayerById2 = (sender, id, data) => {
 const killWerewolf = (sender, id, data) => {
   let result = getPlayerById2(sender, id, data);
   if (!result) return false;
-  let {
-    index,
-    sesi,
-    db
-  } = result;
+  let { index, sesi, db } = result;
   if (data[sesi].player[index].number === id) {
     if (db.effect.includes("guardian")) {
       data[sesi].guardian.push(parseInt(id));
@@ -183,11 +179,7 @@ const killWerewolf = (sender, id, data) => {
 const dreamySeer = (sender, id, data) => {
   let result = getPlayerById2(sender, id, data);
   if (!result) return false;
-  let {
-    index,
-    sesi,
-    db
-  } = result;
+  let { index, sesi, db } = result;
   if (data[sesi].player[index].role === "werewolf") {
     data[sesi].seer = true;
   }
@@ -198,11 +190,7 @@ const dreamySeer = (sender, id, data) => {
 const sorcerer = (sender, id, data) => {
   let result = getPlayerById2(sender, id, data);
   if (!result) return false;
-  let {
-    index,
-    sesi,
-    db
-  } = result;
+  let { index, sesi, db } = result;
   return data[sesi].player[index].role;
 };
 
@@ -210,11 +198,7 @@ const sorcerer = (sender, id, data) => {
 const protectGuardian = (sender, id, data) => {
   let result = getPlayerById2(sender, id, data);
   if (!result) return false;
-  let {
-    index,
-    sesi,
-    db
-  } = result;
+  let { index, sesi, db } = result;
   data[sesi].player[index].effect.push("guardian");
 };
 
@@ -225,10 +209,10 @@ const roleShuffle = (array) => {
   while (currentIndex != 0) {
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex--;
-        [array[currentIndex], array[randomIndex]] = [
-            array[randomIndex],
-            array[currentIndex],
-        ];
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
   }
   return array;
 };
@@ -576,24 +560,24 @@ const getWinner = (from, data) => {
     room.iswin = true;
     return {
       voting: room.voting,
-      status: true
+      status: true,
     };
   } else if (ww === orang_baek) {
     room.iswin = false;
     return {
       voting: room.voting,
-      status: false
+      status: false,
     };
   } else if (orang_baek === 0) {
     room.iswin = false;
     return {
       voting: room.voting,
-      status: false
+      status: false,
     };
   } else {
     return {
       voting: room.voting,
-      status: null
+      status: null,
     };
   }
 };
@@ -661,7 +645,9 @@ const pagii = (data) => {
     }
     textnya = `*⌂ W E R E W O L F - G A M E*\n\nPagi telah tiba, warga desa menemukan ${
       data.dead.length > 1 ? "beberapa" : "1"
-    } mayat di tumpukan puing dan darah berceceran. ${a ? a + " telah mati! " : ""}${
+    } mayat di tumpukan puing dan darah berceceran. ${
+      a ? a + " telah mati! " : ""
+    }${
       d.length > 1
         ? ` ${d} hampir dibunuh, namun *Guardian Angel* berhasil melindunginya.`
         : ""
@@ -673,7 +659,7 @@ const pagii = (data) => {
 };
 
 async function pagi(conn, x, data) {
-  skillOff(x.room, data)
+  skillOff(x.room, data);
   let ment = [];
   for (let i = 0; i < x.player.length; i++) {
     ment.push(x.player[i].id);
@@ -701,14 +687,14 @@ async function pagi(conn, x, data) {
 async function voting(conn, x, data) {
   let row = [];
   let ment = [];
-  voteStart(x.room, data)
+  voteStart(x.room, data);
   textnya =
     "*⌂ W E R E W O L F - G A M E*\n\nSenja telah tiba. Seluruh warga berkumpul di balai desa untuk memilih siapa yang akan dieksekusi. Sebagian warga terlihat sibuk menyiapkan alat penyiksaan untuk malam ini. Kalian mempunyai waktu selama 90 detik untuk memilih! Hati-hati, ada penghianat diantara kalian!\n\n*L I S T - P L A Y E R*:\n";
   shortPlayer(x.room, data);
   for (let i = 0; i < x.player.length; i++) {
     textnya += `(${x.player[i].number}) @${x.player[i].id.replace(
       "@s.whatsapp.net",
-      ""
+      "",
     )} ${x.player[i].isdead === true ? "☠️" : ""}\n`;
     ment.push(x.player[i].id);
   }
@@ -787,10 +773,10 @@ async function malam(conn, x, data) {
     if (hasil_vote.role === "werewolf") {
       textnya = `*⌂ W E R E W O L F - G A M E*\n\nWarga desa telah memilih dan sepakat @${hasil_vote.id.replace(
         "@s.whatsapp.net",
-        ""
+        "",
       )} dieksekusi mati.\n\n@${hasil_vote.id.replace(
         "@s.whatsapp.net",
-        ""
+        "",
       )} adalah ${hasil_vote.role} ${emoji_role(hasil_vote.role)}`;
       voteKill(x.room, data);
       let ment = [];
@@ -821,12 +807,12 @@ async function malam(conn, x, data) {
     } else {
       textnya = `*⌂ W E R E W O L F - G A M E*\n\nWarga desa telah memilih dan sepakat @${hasil_vote.id.replace(
         "@s.whatsapp.net",
-        ""
+        "",
       )} dieksekusi mati.\n\n@${hasil_vote.id.replace(
         "@s.whatsapp.net",
-        ""
+        "",
       )} adalah ${hasil_vote.role} ${emoji_role(
-        hasil_vote.role
+        hasil_vote.role,
       )}\n\nBulan bersinar terang malam ini, warga desa beristirahat di kediaman masing masing. Pemain malam hari: kalian punya 90 detik untuk beraksi!`;
       voteKill(x.room, data);
       let ment = [];
@@ -859,7 +845,7 @@ async function malam(conn, x, data) {
 }
 
 async function skill(conn, x, data) {
-  skillOn(x.room, data)
+  skillOn(x.room, data);
   if (getWinner(x.room, data).status != null || x.win != null) {
     return win(x, 1, conn, data);
   } else {
@@ -873,14 +859,14 @@ async function skill(conn, x, data) {
     for (let i = 0; i < x.player.length; i++) {
       tok1 += `(${x.player[i].number}) @${x.player[i].id.replace(
         "@s.whatsapp.net",
-        ""
+        "",
       )}${x.player[i].isdead === true ? " ☠️" : ""}\n`;
       membernya.push(x.player[i].id);
     }
     for (let i = 0; i < x.player.length; i++) {
       tok2 += `(${x.player[i].number}) @${x.player[i].id.replace(
         "@s.whatsapp.net",
-        ""
+        "",
       )} ${
         x.player[i].role === "werewolf" || x.player[i].role === "sorcerer"
           ? `${x.player[i].isdead === true ? ` ☠️` : ` ${x.player[i].role}`}`
@@ -947,7 +933,7 @@ async function win(x, t, conn, data) {
       if (x.player[i].role === "sorcerer" || x.player[i].role === "werewolf") {
         textnya += `${x.player[i].number}) @${x.player[i].id.replace(
           "@s.whatsapp.net",
-          ""
+          "",
         )}\n     *Role* : ${x.player[i].role}\n\n`;
         ment.push(x.player[i].id);
       }
@@ -981,7 +967,7 @@ async function win(x, t, conn, data) {
       ) {
         textnya += `${x.player[i].number}) @${x.player[i].id.replace(
           "@s.whatsapp.net",
-          ""
+          "",
         )}\n     *Role* : ${x.player[i].role}\n\n`;
         ment.push(x.player[i].id);
       }

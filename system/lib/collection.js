@@ -32,4 +32,4 @@ module.exports = class Collection extends Map {
   defaultSort(firstKey, secondKey) {
     return Number(firstKey > secondKey) || Number(firstKey === secondKey) - 1;
   }
-}
+};

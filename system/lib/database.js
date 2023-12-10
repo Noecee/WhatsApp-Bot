@@ -1,6 +1,6 @@
 const config = require("../../config");
 
-async function idb(m) { 
+async function idb(m) {
   const isNumber = (x) => typeof x === "number" && !isNaN(x);
   const isBoolean = (x) => typeof x === "boolean" && Boolean(x);
   let user = global.db.users[m.sender];
@@ -194,16 +194,16 @@ async function idb(m) {
       };
     }
   }
-  
-  let setting = global.db.settings 
+
+  let setting = global.db.settings;
   if (setting) {
-  	if (!("character_id" in setting)) setting.character_id = '-'
-  	if (!("model" in setting)) setting.model = '-'
+    if (!("character_id" in setting)) setting.character_id = "-";
+    if (!("model" in setting)) setting.model = "-";
   } else {
-  	global.db.settings = {
-  		model: '-'
-  	}
+    global.db.settings = {
+      model: "-",
+    };
   }
 }
 
-module.exports.idb = idb
+module.exports.idb = idb;
